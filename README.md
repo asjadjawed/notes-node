@@ -6,7 +6,7 @@ Download to use.
 
 To get started type:
 
-<kbd>node app --help</kbd>
+<kbd>node main --help</kbd>
 
 Built using:
 
