@@ -13,3 +13,4 @@ Built using:
 - Node.js
 - JSON
 - yargs
+- chalk

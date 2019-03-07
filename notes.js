@@ -1,72 +1,72 @@
 const fs = require("fs");
+const chalk = require("chalk");
 
-const noteExists = (notes, title) =>
-  notes.some(note => note.title.toLowerCase() === title.toLowerCase());
+const { fsWriteFilePromise } = require("./utils/fs-promises");
 
-const saveNotes = notes =>
-  fs.writeFile("notes.json", JSON.stringify(notes), err =>
-    err ? console.error(err) : console.log("\nNotes Updated!")
+let loadedNotes;
+
+try {
+  loadedNotes = JSON.parse(fs.readFileSync("./notes.json").toString());
+} catch (error) {
+  console.error(
+    chalk.red.inverse("Resetting 'notes.json' - File missing / corrupt!")
   );
-
-const displayNote = note =>
-  console.log(`---\nTitle: ${note.title}\n---\nBody: ${note.body}`);
-
-//#region Initializing notes.json
-const initNotes = () => {
-  try {
-    return JSON.parse(fs.readFileSync("notes.json").toString());
-  } catch (error) {
-    console.log("Error Reading File\nInitializing notes.json...");
-    saveNotes([]);
-    return [];
-  }
-};
-
-let notes = initNotes();
-//#endregion
+  loadedNotes = [];
+  fsWriteFilePromise("./notes.json", JSON.stringify(loadedNotes)).catch(error =>
+    console.error(error)
+  );
+}
 
 const addNote = (title, body) => {
-  if (!noteExists(notes, title)) {
-    let note = {
-      title,
-      body
-    };
-    notes = notes.concat(note);
-    saveNotes(notes);
-    displayNote(note);
+  if (
+    loadedNotes.some(note => note.title.toLowerCase() === title.toLowerCase())
+  ) {
+    throw chalk.red.inverse("Note title taken");
   } else {
-    console.log("Note already exits!");
-  }
-};
-
-const getAll = () =>
-  console.log("\nNotes:", ...notes.map(note => `\n${note.title}`));
-
-const getNote = title => {
-  if (noteExists(notes, title)) {
-    let fetchedNote = notes.filter(
-      note => note.title.toLowerCase() === title.toLowerCase()
-    )[0];
-    displayNote(fetchedNote);
-  } else {
-    console.log("Note not found!");
+    loadedNotes.push({ title, body });
+    fsWriteFilePromise("./notes.json", JSON.stringify(loadedNotes)).catch(
+      error => console.error(error)
+    );
+    console.log(chalk.green.inverse("Note Added!"));
   }
 };
 
 const removeNote = title => {
-  if (noteExists(notes, title)) {
-    notes = notes.filter(
+  if (
+    !loadedNotes.some(note => note.title.toLowerCase() === title.toLowerCase())
+  ) {
+    throw chalk.red.inverse("Note doesn't exist");
+  } else {
+    loadedNotes = loadedNotes.filter(
       note => note.title.toLowerCase() !== title.toLowerCase()
     );
-    saveNotes(notes);
+    fsWriteFilePromise("./notes.json", JSON.stringify(loadedNotes)).catch(
+      error => console.error(error)
+    );
+    console.log(chalk.green.inverse("Note removed!"));
+  }
+};
+
+const listNotes = () => {
+  console.log(chalk.blue.inverse("Your notes:"));
+  loadedNotes.forEach(note => console.log(`(*) - ${note.title}`));
+};
+
+const readNote = title => {
+  const selectedNote = loadedNotes.filter(
+    note => note.title.toLowerCase() === title.toLowerCase()
+  );
+
+  if (!selectedNote.length) {
+    throw chalk.red.inverse("Note doesn't exist");
   } else {
-    console.log("Note not found");
+    console.log(`\n--=${selectedNote[0].title}=--\n${selectedNote[0].body}\n`);
   }
 };
 
 module.exports = {
   addNote,
-  getAll,
-  getNote,
-  removeNote
+  removeNote,
+  listNotes,
+  readNote
 };
