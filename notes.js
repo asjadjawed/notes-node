@@ -1,21 +1,7 @@
-const fs = require("fs");
 const chalk = require("chalk");
-
 const { fsWriteFilePromise } = require("./utils/fs-promises");
 
-let loadedNotes;
-
-try {
-  loadedNotes = JSON.parse(fs.readFileSync("./notes.json").toString());
-} catch (error) {
-  console.error(
-    chalk.red.inverse("Resetting 'notes.json' - File missing / corrupt!")
-  );
-  loadedNotes = [];
-  fsWriteFilePromise("./notes.json", JSON.stringify(loadedNotes)).catch(error =>
-    console.error(error)
-  );
-}
+let { loadedNotes } = require("./startup");
 
 const addNote = (title, body) => {
   if (
@@ -24,10 +10,11 @@ const addNote = (title, body) => {
     throw chalk.red.inverse("Note title taken");
   } else {
     loadedNotes.push({ title, body });
-    fsWriteFilePromise("./notes.json", JSON.stringify(loadedNotes)).catch(
-      error => console.error(error)
-    );
-    console.log(chalk.green.inverse("Note Added!"));
+    fsWriteFilePromise("./notes.json", JSON.stringify(loadedNotes))
+      .then(() => console.log(chalk.green.inverse("Note Added!")))
+      .catch(() =>
+        console.error(chalk.red.inverse("Unable to write to 'notes.json'"))
+      );
   }
 };
 
@@ -48,6 +35,8 @@ const removeNote = title => {
 };
 
 const listNotes = () => {
+  if (loadedNotes.length === 0)
+    return console.log(chalk.yellow.inverse("No notes found!"));
   console.log(chalk.blue.inverse("Your notes:"));
   loadedNotes.forEach(note => console.log(`(*) - ${note.title}`));
 };
