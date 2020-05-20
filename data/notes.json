@@ -1,0 +1,6 @@
+[
+  { "title": "Title 1", "body": "Note Body 1" },
+  { "title": "Get Eggs", "body": "Buy a dozen eggs." },
+  { "title": "Learn Node.js", "body": "Hmm.. learn the MERN stack as well" },
+  { "title": "Walk the Dog", "body": "and the cat?" }
+]

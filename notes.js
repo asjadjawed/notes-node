@@ -10,7 +10,7 @@ const addNote = (title, body) => {
     throw chalk.red.inverse("Note title taken");
   } else {
     loadedNotes.push({ title, body });
-    fsWriteFilePromise("./notes.json", JSON.stringify(loadedNotes))
+    fsWriteFilePromise("./data/notes.json", JSON.stringify(loadedNotes))
       .then(() => console.log(chalk.green.inverse("Note Added!")))
       .catch(() =>
         console.error(chalk.red.inverse("Unable to write to 'notes.json'"))
@@ -30,7 +30,7 @@ const removeNote = (title) => {
       (note) => note.title.toLowerCase() !== title.toLowerCase()
     );
     fsWriteFilePromise(
-      "./notes.json",
+      "./data/notes.json",
       JSON.stringify(loadedNotes)
     ).catch((error) => console.error(error));
     console.log(chalk.green.inverse("Note removed!"));
