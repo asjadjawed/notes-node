@@ -1,5 +1,5 @@
 const chalk = require("chalk");
-const { fsWriteFilePromise } = require("./utils/fs-promises");
+const { fsWriteFilePromise } = require("../utils/fs-promises");
 
 let { loadedNotes } = require("./startup");
 
@@ -10,7 +10,7 @@ const addNote = (title, body) => {
     throw chalk.red.inverse("Note title taken");
   } else {
     loadedNotes.push({ title, body });
-    fsWriteFilePromise("./data/notes.json", JSON.stringify(loadedNotes))
+    fsWriteFilePromise("data/notes.json", JSON.stringify(loadedNotes))
       .then(() => console.log(chalk.green.inverse("Note Added!")))
       .catch(() =>
         console.error(chalk.red.inverse("Unable to write to 'notes.json'"))
@@ -30,7 +30,7 @@ const removeNote = (title) => {
       (note) => note.title.toLowerCase() !== title.toLowerCase()
     );
     fsWriteFilePromise(
-      "./data/notes.json",
+      "data/notes.json",
       JSON.stringify(loadedNotes)
     ).catch((error) => console.error(error));
     console.log(chalk.green.inverse("Note removed!"));

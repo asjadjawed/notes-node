@@ -1,5 +1,5 @@
 const yargs = require("yargs");
-const notes = require("./notes");
+const notes = require("./helpers/notes");
 
 yargs.version("1.0.1");
 yargs.usage("Node CLI Notes Manager\nmain.js <command> [options]");
