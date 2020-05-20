@@ -11,11 +11,11 @@
   "author": "Asjad Jawed Siddiqui Qadri <asjadjawed@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "chalk": "^2.4.2",
-    "yargs": "^13.3.0"
+    "chalk": "^4.0.0",
+    "yargs": "^15.3.1"
   },
   "devDependencies": {
-    "eslint": "^6.5.1",
-    "nodemon": "^1.19.3"
+    "eslint": "^7.0.0",
+    "nodemon": "^2.0.4"
   }
 }
