@@ -8,7 +8,7 @@ yargs.demandCommand(1, "Missing command");
 const title = {
   describe: "Note title",
   demandOption: true,
-  type: "string"
+  type: "string",
 };
 
 yargs.command({
@@ -19,8 +19,8 @@ yargs.command({
     body: {
       describe: "Note Body",
       demandOption: true,
-      type: "string"
-    }
+      type: "string",
+    },
   },
   handler(argv) {
     try {
@@ -28,7 +28,7 @@ yargs.command({
     } catch (error) {
       console.error(error);
     }
-  }
+  },
 });
 
 yargs.command({
@@ -41,7 +41,7 @@ yargs.command({
     } catch (error) {
       console.error(error);
     }
-  }
+  },
 });
 
 yargs.command({
@@ -49,7 +49,7 @@ yargs.command({
   describe: "Listing all notes",
   handler() {
     notes.listNotes();
-  }
+  },
 });
 
 yargs.command({
@@ -62,7 +62,7 @@ yargs.command({
     } catch (error) {
       console.error(error);
     }
-  }
+  },
 });
 
 yargs.help();
