@@ -5,7 +5,7 @@ let { loadedNotes } = require("./startup");
 
 const addNote = (title, body) => {
   if (
-    loadedNotes.some(note => note.title.toLowerCase() === title.toLowerCase())
+    loadedNotes.some((note) => note.title.toLowerCase() === title.toLowerCase())
   ) {
     throw chalk.red.inverse("Note title taken");
   } else {
@@ -18,18 +18,21 @@ const addNote = (title, body) => {
   }
 };
 
-const removeNote = title => {
+const removeNote = (title) => {
   if (
-    !loadedNotes.some(note => note.title.toLowerCase() === title.toLowerCase())
+    !loadedNotes.some(
+      (note) => note.title.toLowerCase() === title.toLowerCase()
+    )
   ) {
     throw chalk.red.inverse("Note doesn't exist");
   } else {
     loadedNotes = loadedNotes.filter(
-      note => note.title.toLowerCase() !== title.toLowerCase()
+      (note) => note.title.toLowerCase() !== title.toLowerCase()
     );
-    fsWriteFilePromise("./notes.json", JSON.stringify(loadedNotes)).catch(
-      error => console.error(error)
-    );
+    fsWriteFilePromise(
+      "./notes.json",
+      JSON.stringify(loadedNotes)
+    ).catch((error) => console.error(error));
     console.log(chalk.green.inverse("Note removed!"));
   }
 };
@@ -38,12 +41,12 @@ const listNotes = () => {
   if (loadedNotes.length === 0)
     return console.log(chalk.yellow.inverse("No notes found!"));
   console.log(chalk.blue.inverse("Your notes:"));
-  loadedNotes.forEach(note => console.log(`(*) - ${note.title}`));
+  loadedNotes.forEach((note) => console.log(`(*) - ${note.title}`));
 };
 
-const readNote = title => {
+const readNote = (title) => {
   const selectedNote = loadedNotes.filter(
-    note => note.title.toLowerCase() === title.toLowerCase()
+    (note) => note.title.toLowerCase() === title.toLowerCase()
   );
 
   if (!selectedNote.length) {
@@ -57,5 +60,5 @@ module.exports = {
   addNote,
   removeNote,
   listNotes,
-  readNote
+  readNote,
 };
